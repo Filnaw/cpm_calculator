@@ -1,4 +1,4 @@
-# Project Name
+# CPM calculator
 
 ## Setup Instructions
 
@@ -34,7 +34,7 @@ python3 server.py
 
 #### On Windows:
 ```sh
-python server.py
+py server.py
 ```
 
 Make sure all necessary dependencies are installed before running the server.
