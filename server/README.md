@@ -3,16 +3,22 @@
 ## Setup Instructions
 
 ### Activating Virtual Environment
-Before running the server, activate the virtual environment with the installed libraries:
+Okay, sooooo the first time using server requires creating virtual environment (why? So you don't have to install things like flask on your own computer, so once this project is done you delete it and poof every library is delete with it as well). So you create it and then install all needed libraries from the requirements.txt file.
 
 #### On Linux:
 ```sh
+cd server
+python3 -m venv venv
 source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 #### On Windows:
 ```sh
+cd server
+py -m venv venv
 venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
 ### Deactivating Virtual Environment
