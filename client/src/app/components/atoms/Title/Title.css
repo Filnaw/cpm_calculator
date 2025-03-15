@@ -1,0 +1,67 @@
+.main-heading {
+  font-size: var(--font-size, 25px);
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gradient, #ffffff);
+  background: var(--gradient, none);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--fill-color, inherit);
+  letter-spacing: var(--letter-spacing, 2px);
+  text-shadow: var(--text-shadow, 4px 4px 15px rgba(229, 9, 20, 0.4));
+  transition: all 0.4s ease-in-out;
+  padding: 5px;
+  margin-bottom: var(--margin-bottom);
+}
+
+.main-heading.gradient {
+  --gradient: linear-gradient(135deg, #e50914, #ff1e28);
+  --fill-color: transparent;
+}
+
+.main-heading.small {
+  --font-size: 18px;
+  --letter-spacing: 1px;
+  --margin-bottom: 10px;
+}
+
+.main-heading.large {
+  --font-size: 48px;
+  --letter-spacing: 3px;
+  --text-shadow: 6px 6px 20px rgba(255, 30, 40, 0.7);
+}
+
+.main-heading.large {
+  font-size: 48px;
+  letter-spacing: 3px;
+  text-shadow: 6px 6px 20px rgba(255, 30, 40, 0.7);
+}
+
+.main-heading:hover {
+  letter-spacing: 3px;
+}
+
+/* Glow animation */
+@keyframes glowPulse {
+  0% {
+    text-shadow: 4px 4px 15px rgba(255, 30, 40, 0.4);
+  }
+  50% {
+    text-shadow: 6px 6px 20px rgba(255, 30, 40, 0.7);
+  }
+  100% {
+    text-shadow: 4px 4px 15px rgba(255, 30, 40, 0.4);
+  }
+}
+
+@media (max-width: 768px) {
+  .main-heading.large {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-heading.large {
+    font-size: 28px;
+  }
+}

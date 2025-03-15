@@ -1,0 +1,11 @@
+.form
+{
+    display: flex;
+    flex-direction: column;
+    height:auto;
+    width: 40%;
+    padding: 30px;
+    background-color: rgba(14, 14, 14, 0.49);
+    justify-content: center;
+    align-items: center;
+}
