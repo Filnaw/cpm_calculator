@@ -1,22 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import networkx as nx
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/gantt": {"origins": "*"}})
 
-tasks = [
-    {"id": "A", "name": "A", "duration": 3, "dependencies": []},
-    {"id": "B", "name": "B", "duration": 5, "dependencies": []},
-    {"id": "C", "name": "C", "duration": 2, "dependencies": ["A"]},
-    {"id": "D", "name": "D", "duration": 4, "dependencies": ["B"]},
-    {"id": "E", "name": "E", "duration": 3, "dependencies": ["B"]},
-    {"id": "F", "name": "F", "duration": 2, "dependencies": ["C", "D"]},
-    {"id": "G", "name": "G", "duration": 4, "dependencies": ["E"]},
-    {"id": "H", "name": "H", "duration": 3, "dependencies": ["F", "G"]},
-    {"id": "I", "name": "I", "duration": 2, "dependencies": ["H"]}
-
-]
+tasks = []
 
 def calculate_cpm(tasks):
     G = nx.DiGraph()
@@ -77,6 +66,16 @@ def get_gantt_data():
     cpm_data = calculate_cpm(tasks)
     return jsonify(cpm_data)
 
+@app.route('/gantt', methods=['POST'])
+def update_tasks():
+    global tasks
+    data = request.get_json()
+
+    if not data or "tasks" not in data:
+        return jsonify({"error": "Brak listy tasks w żądaniu"}), 400
+
+    tasks = data["tasks"]
+    return jsonify({"message": "Tasks updated successfully", "tasks": tasks})
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
