@@ -14,7 +14,7 @@
   justify-content: center;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: var(--button-text-color);
-  padding: 14px 28px;
+  padding: 14px 58px;
   border-radius: 0;
   cursor: pointer;
   transition:

@@ -6,19 +6,18 @@ import Container from "@/app/components/atoms/Container/Container";
 import Button from "@/app/components/atoms/Button/Button";
 import { useState } from "react";
 
-function Form({ setDependencies }) {
-    const [tasks, setTasks] = useState([]);
+function Form({ setTasks, setDependencies }) {
     const [taskID, setTaskID] = useState("");
     const [taskName, setTaskName] = useState("");
     const [duration, setDuration] = useState("");
     const [localDependencies, setLocalDependencies] = useState([]);
     const [ganttData, setGanttData] = useState(null);
 
-    const updateTasksOnServer = (newTasks, newDependencies) => {
+    const updateTasksOnServer = (updatedTasks, updatedDependencies) => {
         fetch("http://localhost:8000/gantt", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tasks: newTasks, dependencies: newDependencies }),
+            body: JSON.stringify({ tasks: updatedTasks, dependencies: updatedDependencies }),
         })
         .then(response => response.json())
         .then(data => {
@@ -33,14 +32,26 @@ function Form({ setDependencies }) {
             id: taskID,
             name: taskName,
             duration: duration ? parseInt(duration) : 0,
+            earliest_start: 0,
+            earliest_finish: 0,
+            latest_start: 0,
+            latest_finish: 0,
+            critical: true
         };
 
         const newDependencyObjects = localDependencies.map(dep => ({ from: taskID, to: dep.to.trim() }));
-        const updatedTasks = [...tasks, newTask];
-        setTasks(updatedTasks);
-        setDependencies(prev => [...prev, ...newDependencyObjects]);
+        setTasks(prevTasks => {
+            const updatedTasks = [...prevTasks, newTask];
+            updateTasksOnServer(updatedTasks, [...newDependencyObjects]);
+            return updatedTasks;
+        });
 
-        updateTasksOnServer(updatedTasks, [...localDependencies, ...newDependencyObjects]);
+        setDependencies(prevDeps => {
+            const updatedDependencies = [...prevDeps, ...newDependencyObjects];
+            return updatedDependencies;
+        });
+
+
         setTaskID("");
         setTaskName("");
         setDuration("");
@@ -52,7 +63,7 @@ function Form({ setDependencies }) {
         setTaskName("");
         setDuration("");
         setLocalDependencies([]);
-        setGanttData(null);
+        setTasks([]);
         setDependencies([]);
     };
 
@@ -98,7 +109,6 @@ function Form({ setDependencies }) {
                 <Button onClick={addTask} text="Add Task" variant="default" />
                 <Button onClick={reset} text="Reset" variant="glass" />
             </Container>
-
         </div>
     );
 }

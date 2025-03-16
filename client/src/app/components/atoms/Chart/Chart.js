@@ -100,10 +100,6 @@ const Chart = ({ tasks, dependencies }) => {
             .style("font-size", "12px")
             .style("fill", "white")
             .selectAll("tspan")
-            .data((d) => [
-                `ES: ${g.node(d).data.earliest_start}  EF: ${g.node(d).data.earliest_finish}`,
-                `LS: ${g.node(d).data.latest_start}  LF: ${g.node(d).data.latest_finish}`,
-            ])
             .enter()
             .append("tspan")
             .attr("x", (d, i, nodes) => d3.select(nodes[i].parentNode).attr("x"))
