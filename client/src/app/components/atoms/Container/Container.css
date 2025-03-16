@@ -1,3 +1,5 @@
+@import '../../../../../__variables.css';
+
 .container {
     display: flex;
     flex-direction: column;
@@ -12,7 +14,7 @@
 .container.fullscreen {
     height: 100vh;
     width: 100vw;
-    background-color: #0e0e0e;
+    background-color: var(--container-background-color);
 }
 
 .container.row {
@@ -21,5 +23,5 @@
     width: 98%;
     align-items: stretch;
     gap:20px;
-    background-color: #171717;
+    background-color: var(--container-background-color);
 }

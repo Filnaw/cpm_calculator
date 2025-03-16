@@ -1,3 +1,5 @@
+@import '../../../../../__variables.css';
+
 .main-heading {
   font-size: var(--font-size, 25px);
   font-weight: 800;
@@ -8,14 +10,14 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: var(--fill-color, inherit);
   letter-spacing: var(--letter-spacing, 2px);
-  text-shadow: var(--text-shadow, 4px 4px 15px rgba(229, 9, 20, 0.4));
+  text-shadow: var(--text-shadow, 4px 4px 15px var(--title-text-shadow-color));
   transition: all 0.4s ease-in-out;
   padding: 5px;
   margin-bottom: var(--margin-bottom);
 }
 
 .main-heading.gradient {
-  --gradient: linear-gradient(135deg, #e50914, #ff1e28);
+  --gradient: linear-gradient(135deg, var(--title-primary-color), var(--title-secondary-color));
   --fill-color: transparent;
 }
 
@@ -28,29 +30,29 @@
 .main-heading.large {
   --font-size: 48px;
   --letter-spacing: 3px;
-  --text-shadow: 6px 6px 20px rgba(255, 30, 40, 0.7);
+  --text-shadow: 6px 6px 20px var(--title-text-shadow-color);
 }
+
 
 .main-heading.large {
   font-size: 48px;
   letter-spacing: 3px;
-  text-shadow: 6px 6px 20px rgba(255, 30, 40, 0.7);
+  text-shadow: 6px 6px 20px var(--title-large-text-shadow-color);
 }
 
 .main-heading:hover {
   letter-spacing: 3px;
 }
 
-/* Glow animation */
 @keyframes glowPulse {
   0% {
-    text-shadow: 4px 4px 15px rgba(255, 30, 40, 0.4);
+    text-shadow: 4px 4px 15px var(--title-pulse-text-shadow-primary-color);
   }
   50% {
-    text-shadow: 6px 6px 20px rgba(255, 30, 40, 0.7);
+    text-shadow: 6px 6px 20px var(--title-pulse-text-shadow-secondary-color);
   }
   100% {
-    text-shadow: 4px 4px 15px rgba(255, 30, 40, 0.4);
+    text-shadow: 4px 4px 15px var(--title-pulse-text-shadow-primary-color);
   }
 }
 

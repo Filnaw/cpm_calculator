@@ -1,10 +1,12 @@
+@import '../../../../../__variables.css';
+
 .chart
 {
     display: flex;
     width:50%;
     height:auto;
     padding: 10px;
-    background-color: rgba(67, 62, 62, 0.3);
+    background-color: var(--chart-background-color);
     justify-content: center;
     align-items: center;
 }

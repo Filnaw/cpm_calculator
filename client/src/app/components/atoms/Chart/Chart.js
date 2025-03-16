@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import dagre from "dagre";
 import "./Chart.css";
+import '../../../../../__variables.css';
 
 const Chart = ({ tasks, dependencies }) => {
     const svgRef = useRef(null);
