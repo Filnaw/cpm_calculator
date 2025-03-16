@@ -4,60 +4,56 @@ import Input from "@/app/components/atoms/Input/Input";
 import Title from "@/app/components/atoms/Title/Title";
 import Container from "@/app/components/atoms/Container/Container";
 import Button from "@/app/components/atoms/Button/Button";
-import {useEffect, useState} from "react";
+import { useState } from "react";
 
-
-function Form() {
+function Form({ setDependencies }) {
     const [tasks, setTasks] = useState([]);
     const [taskID, setTaskID] = useState("");
     const [taskName, setTaskName] = useState("");
     const [duration, setDuration] = useState("");
-    const [dependencies, setDependencies] = useState("");
+    const [localDependencies, setLocalDependencies] = useState([]);
     const [ganttData, setGanttData] = useState(null);
 
-    const updateTasksOnServer = (newTasks) => {
+    const updateTasksOnServer = (newTasks, newDependencies) => {
         fetch("http://localhost:8000/gantt", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tasks: newTasks }),
+            body: JSON.stringify({ tasks: newTasks, dependencies: newDependencies }),
         })
         .then(response => response.json())
-        .then(data => console.log("Tasks updated:", data))
+        .then(data => {
+            console.log("📡 Aktualizacja tasks:", data);
+            setGanttData(data);
+        })
         .catch(error => console.error("Error updating tasks:", error));
     };
 
-
-    useEffect(() => {
-        fetch("http://localhost:8000/gantt")
-            .then(response => response.json())
-            .then(data => setGanttData(data))
-            .catch(error => console.error("Error fetching Gantt data:", error));
-    }, [tasks]);  //
-
     const addTask = () => {
-
         const newTask = {
             id: taskID,
             name: taskName,
             duration: duration ? parseInt(duration) : 0,
-            dependencies: dependencies ? dependencies.split(",").map(dep => dep.trim()) : []
         };
 
-        const newTasks = [...tasks, newTask];
-        setTasks(newTasks);
-        updateTasksOnServer(newTasks);
+        const newDependencyObjects = localDependencies.map(dep => ({ from: taskID, to: dep.to.trim() }));
+        const updatedTasks = [...tasks, newTask];
+        setTasks(updatedTasks);
+        setDependencies(prev => [...prev, ...newDependencyObjects]);
+
+        updateTasksOnServer(updatedTasks, [...localDependencies, ...newDependencyObjects]);
         setTaskID("");
         setTaskName("");
         setDuration("");
-        setDependencies("");
+        setLocalDependencies([]);
     };
 
     const reset = () => {
         setTaskID("");
         setTaskName("");
         setDuration("");
-        setDependencies("");
+        setLocalDependencies([]);
         setGanttData(null);
+        setDependencies([]);
     };
 
     return (
@@ -89,8 +85,13 @@ function Form() {
                 type="text"
                 label="Dependencies (comma-separated IDs):"
                 placeholder="B,C"
-                value={dependencies || ""}
-                onChange={(e) => setDependencies(e.target.value)}
+                value={localDependencies.map(dep => dep.to).join(", ")}
+                onChange={(e) => {
+                    const updatedDeps = e.target.value.split(",")
+                        .map(dep => ({ from: taskID, to: dep.trim() }))
+                        .filter(dep => dep.to !== "");
+                    setLocalDependencies(updatedDeps);
+                }}
             />
 
             <Container variant="row">
@@ -98,23 +99,6 @@ function Form() {
                 <Button onClick={reset} text="Reset" variant="glass" />
             </Container>
 
-            <Button text="Calculate" variant="default" />
-
-            <ul>
-                {tasks.map((task, index) => (
-                    <li key={index}>
-                        <strong>{task.id}</strong> - {task.name}, {task.duration} days
-                        {task.dependencies.length > 0 && ` (Depends on: ${task.dependencies.join(", ")})`}
-                    </li>
-                ))}
-            </ul>
-
-            <h3>CPM Results:</h3>
-            {ganttData ? (
-                <pre>{JSON.stringify(ganttData, null, 2)}</pre>
-            ) : (
-                <p>No Gantt data yet...</p>
-            )}
         </div>
     );
 }

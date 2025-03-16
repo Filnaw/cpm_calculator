@@ -1,8 +1,9 @@
-
+"use client";
 import Navbar from "@/app/molecules/navbar/Navbar";
 import Form from "@/app/molecules/form/Form";
 import Container from "@/app/components/atoms/Container/Container";
 import Chart from "@/app/components/atoms/Chart/Chart";
+import {useState} from "react";
 
 
 function Home() {
@@ -16,21 +17,13 @@ function Home() {
         { id: "H", earliest_start: 14, earliest_finish: 16, latest_start: 14, latest_finish: 16, critical: true }
     ];
 
-    const dependencies = [
-        { from: "A", to: "B", label: "A2" },
-        { from: "A", to: "C", label: "C3" },
-        { from: "B", to: "D", label: "D5" },
-        { from: "C", to: "D", label: "F3" },
-        { from: "D", to: "H", label: "H2" },
-        { from: "B", to: "E", label: "E2" },
-        { from: "E", to: "G", label: "G4" },
-        { from: "G", to: "H", label: "H2" }
-    ];
+     const [dependencies, setDependencies] = useState([]);
+
   return (
     <Container>
       <Navbar/>
         <Container variant="row">
-            <Form/>
+            <Form setDependencies={setDependencies}/>
              <Chart tasks={tasks} dependencies={dependencies} />
         </Container>
 
