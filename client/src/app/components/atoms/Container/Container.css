@@ -18,7 +18,8 @@
 .container.row {
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    width: 80%;
-    max-width: 1200px;
+    width: 98%;
+    align-items: stretch;
+    gap:20px;
+    background-color: #171717;
 }

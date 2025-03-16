@@ -6,6 +6,7 @@ import Button from "@/app/components/atoms/Button/Button";
 
 
 function Form(){
+
     return(
         <div className="form">
             <Title title="Critical Path Method Calculator" variant="small"/>
@@ -16,9 +17,6 @@ function Form(){
             <Container variant="row">
                 <Button text="Add Task" variant="default"/>
                 <Button text="Reset" variant="glass"/>
-            </Container>
-            <Container variant="row">
-                <Button text="Calculate CPM" variant="primary" />
             </Container>
         </div>
     );
