@@ -1,19 +1,22 @@
 @import '../../../../../__variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
 
 .main-heading {
   font-size: var(--font-size, 25px);
-  font-weight: 800;
+  font-weight: var(--font-weight, 700);
   text-transform: uppercase;
   text-align: center;
+  letter-spacing: 3px;
   color: var(--gradient, #ffffff);
   background: var(--gradient, none);
   -webkit-background-clip: text;
   -webkit-text-fill-color: var(--fill-color, inherit);
-  letter-spacing: var(--letter-spacing, 2px);
   text-shadow: var(--text-shadow, 4px 4px 15px var(--title-text-shadow-color));
   transition: all 0.4s ease-in-out;
   padding: 5px;
   margin-bottom: var(--margin-bottom);
+  font-family: "Inter", "Roboto", "Source Sans Pro", sans-serif;
 }
 
 .main-heading.gradient {
@@ -25,6 +28,7 @@
   --font-size: 18px;
   --letter-spacing: 1px;
   --margin-bottom: 10px;
+  --font-weight:600;
 }
 
 .main-heading.large {
@@ -38,10 +42,6 @@
   font-size: 48px;
   letter-spacing: 3px;
   text-shadow: 6px 6px 20px var(--title-large-text-shadow-color);
-}
-
-.main-heading:hover {
-  letter-spacing: 3px;
 }
 
 @keyframes glowPulse {

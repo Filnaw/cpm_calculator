@@ -75,7 +75,7 @@ const Chart = ({ tasks, dependencies }) => {
             .attr("y", (d) => g.node(d).y - 30)
             .attr("width", 100)
             .attr("height", 80)
-            .attr("fill", (d) => g.node(d).data.critical ? "#e41c1c" : "rgba(188,186,186,0.3)")
+            .attr("fill", (d) => g.node(d).data.critical ? "#ff9900" : "rgba(188,186,186,0.3)")
             .attr("stroke", "black");
 
         container.selectAll(".node-label")

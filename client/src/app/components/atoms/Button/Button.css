@@ -1,9 +1,10 @@
 @import '../../../../../__variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
 
 .tooltip-container {
   position: relative;
   display: inline-block;
-  font-family: "Arial", sans-serif;
   overflow: visible;
 }
 
@@ -80,11 +81,12 @@
 
 .text {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   margin-right: 12px;
   white-space: nowrap;
   text-shadow: 0 1px 2px var(--text-shadow-color);
   transition: letter-spacing 0.3s ease;
+  font-family: "Inter", "Roboto", "Source Sans Pro", sans-serif;
 }
 
 .button-content:hover .text {
