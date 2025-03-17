@@ -4,7 +4,7 @@ import Input from "@/app/components/atoms/Input/Input";
 import Title from "@/app/components/atoms/Title/Title";
 import Container from "@/app/components/atoms/Container/Container";
 import Button from "@/app/components/atoms/Button/Button";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 function Form({ setTasks, setDependencies }) {
     const [taskID, setTaskID] = useState("");
@@ -12,6 +12,22 @@ function Form({ setTasks, setDependencies }) {
     const [duration, setDuration] = useState("");
     const [localDependencies, setLocalDependencies] = useState([]);
     const [ganttData, setGanttData] = useState(null);
+
+     const fetchGanttData = () => {
+        fetch("http://localhost:8000/gantt")
+            .then(response => response.json())
+            .then(data => {
+                console.log("📡 Pobranie danych z serwera:", data);
+                setGanttData(data);
+                setTasks(data.tasks || []);
+                setDependencies(data.dependencies || []);
+            })
+            .catch(error => console.error("Błąd pobierania danych:", error));
+    };
+
+    useEffect(() => {
+        fetchGanttData();
+    }, []);
 
     const updateTasksOnServer = (updatedTasks, updatedDependencies) => {
         fetch("http://localhost:8000/gantt", {
@@ -36,7 +52,7 @@ function Form({ setTasks, setDependencies }) {
             earliest_finish: 0,
             latest_start: 0,
             latest_finish: 0,
-            critical: true
+            critical: false
         };
 
         const newDependencyObjects = localDependencies.map(dep => ({ from: taskID, to: dep.to.trim() }));
@@ -66,6 +82,10 @@ function Form({ setTasks, setDependencies }) {
         setTasks([]);
         setDependencies([]);
     };
+
+    const calculate = () =>{
+        fetchGanttData();
+    }
 
     return (
         <div className="form">
@@ -109,6 +129,8 @@ function Form({ setTasks, setDependencies }) {
                 <Button onClick={addTask} text="Add Task" variant="default" />
                 <Button onClick={reset} text="Reset" variant="glass" />
             </Container>
+
+            <Button onClick={calculate} text="Calculate" variant="default" />
         </div>
     );
 }

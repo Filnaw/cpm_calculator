@@ -5,7 +5,17 @@ import networkx as nx
 app = Flask(__name__)
 CORS(app, resources={r"/gantt": {"origins": "*"}})
 
-tasks = []
+tasks = [
+    {"id": "A", "name": "A", "duration": 3, "dependencies": []},
+    {"id": "B", "name": "B", "duration": 5, "dependencies": []},
+    {"id": "C", "name": "C", "duration": 2, "dependencies": ["A"]},
+    {"id": "D", "name": "D", "duration": 4, "dependencies": ["B"]},
+    {"id": "E", "name": "E", "duration": 3, "dependencies": ["B"]},
+    {"id": "F", "name": "F", "duration": 2, "dependencies": ["C", "D"]},
+    {"id": "G", "name": "G", "duration": 4, "dependencies": ["E"]},
+    {"id": "H", "name": "H", "duration": 3, "dependencies": ["F", "G"]},
+    {"id": "I", "name": "I", "duration": 2, "dependencies": ["H"]}
+]
 
 def calculate_cpm(tasks):
     G = nx.DiGraph()
@@ -14,7 +24,7 @@ def calculate_cpm(tasks):
         G.add_node(task["id"], duration=task["duration"])
 
     for task in tasks:
-        for dep in task["dependencies"]:
+        for dep in task.get("dependencies", []):
             G.add_edge(dep, task["id"])
 
     earliest_start = {}
@@ -38,7 +48,6 @@ def calculate_cpm(tasks):
         else:
             latest_finish[node] = min(latest_start[s] for s in successors)
         latest_start[node] = latest_finish[node] - G.nodes[node]["duration"]
-
 
     critical_path = [node for node in G.nodes if earliest_start[node] == latest_start[node]]
 
