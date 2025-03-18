@@ -5,6 +5,7 @@ import Container from "@/app/components/atoms/Container/Container";
 import Chart from "@/app/components/atoms/Chart/Chart";
 import {useState} from "react";
 import GanttChart from "@/app/components/atoms/GanttChart/GanttChart";
+import Table from "@/app/components/atoms/Table/Table";
 
 
 function Home() {
@@ -21,6 +22,7 @@ function Home() {
         </Container>
         <Container variant="row">
              <GanttChart/>
+             <Table/>
         </Container>
     </Container>
   );
