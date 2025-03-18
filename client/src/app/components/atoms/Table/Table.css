@@ -4,7 +4,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
 .table {
@@ -12,6 +11,7 @@
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   background-color: white;
+  height: 100%;
 }
 
 .table th,

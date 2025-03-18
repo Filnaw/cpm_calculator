@@ -18,11 +18,11 @@ function Home() {
       <Navbar/>
         <Container variant="row">
             <Form setTasks={setTasks} setDependencies={setDependencies}/>
-             <Chart tasks={tasks} dependencies={dependencies} />
+             <Table setTasks={setTasks}/>
         </Container>
         <Container variant="row">
              <GanttChart setTasks={setTasks}/>
-             <Table setTasks={setTasks}/>
+             <Chart tasks={tasks} dependencies={dependencies} />
         </Container>
     </Container>
   );
