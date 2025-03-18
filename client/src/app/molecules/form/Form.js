@@ -30,18 +30,28 @@ function Form({ setTasks, setDependencies }) {
     }, []);
 
     const updateTasksOnServer = (updatedTasks, updatedDependencies) => {
-        fetch("http://localhost:8000/gantt", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tasks: updatedTasks, dependencies: updatedDependencies }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("📡 Aktualizacja tasks:", data);
-            setGanttData(data);
-        })
-        .catch(error => console.error("Error updating tasks:", error));
-    };
+    fetch("http://localhost:8000/gantt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            tasks: updatedTasks.map(task => ({
+                ...task,
+                dependencies: updatedDependencies
+                    .filter(dep => dep.to === task.id)
+                    .map(dep => dep.from)
+            })),
+            dependencies: updatedDependencies
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("📡 Aktualizacja tasks:", data);
+        setGanttData(data);
+    })
+    .catch(error => console.error("Error updating tasks:", error));
+};
+
+
 
     const addTask = () => {
         const newTask = {

@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "frappe-gantt": "^1.0.3",
+    "gantt-for-react": "^0.2.0",
+    "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.1"
+    "react-gantt": "^2.1.8"
   }
 }

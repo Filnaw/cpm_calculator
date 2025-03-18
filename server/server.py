@@ -84,7 +84,15 @@ def update_tasks():
         return jsonify({"error": "Brak listy tasks w żądaniu"}), 400
 
     tasks = data["tasks"]
+
+    if "dependencies" in data:
+        for dep in data["dependencies"]:
+            task = next((t for t in tasks if t["id"] == dep["to"]), None)
+            if task:
+                task.setdefault("dependencies", []).append(dep["from"])
+
     return jsonify({"message": "Tasks updated successfully", "tasks": tasks})
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

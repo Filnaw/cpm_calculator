@@ -1,0 +1,43 @@
+@import '../../../../../__variables.css';
+
+
+.gantt-container {
+  width: 100%;
+  height: auto;
+  overflow-x: auto;
+}
+
+.gantt {
+  background-color: var(--form-background-color) !important;
+}
+
+.gantt .grid-row,
+.gantt .grid-header {
+  stroke: var(--input-hover-color) !important;
+  fill: var(--form-background-color) !important;
+}
+
+.gantt .bar {
+  fill: var(--title-large-text-shadow-color) !important;
+  stroke: var(--tooltip-border-color) !important;
+}
+
+
+.gantt .bar-progress {
+  fill: var(--chart-primary-color) !important;
+}
+
+
+.gantt text {
+  fill: var(--label-color) !important;
+  font-size: 14px !important;
+  font-weight: bold;
+}
+
+.gantt .arrow {
+  stroke: var(--input-focus-color) !important;
+}
+
+.gantt .bar-wrapper:hover .bar {
+  fill: var(--focus-btn-primary-color) !important;
+}
