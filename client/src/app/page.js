@@ -21,7 +21,7 @@ function Home() {
              <Chart tasks={tasks} dependencies={dependencies} />
         </Container>
         <Container variant="row">
-             <GanttChart/>
+             <GanttChart setTasks={setTasks}/>
              <Table setTasks={setTasks}/>
         </Container>
     </Container>
