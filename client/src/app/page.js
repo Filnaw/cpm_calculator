@@ -22,7 +22,7 @@ function Home() {
         </Container>
         <Container variant="row">
              <GanttChart/>
-             <Table/>
+             <Table setTasks={setTasks}/>
         </Container>
     </Container>
   );

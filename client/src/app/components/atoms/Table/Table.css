@@ -26,10 +26,7 @@
   color: var(--label-color);
 }
 
-.table tbody tr:nth-child(even) {
-  background-color: var(--tooltip-background);
-  color:white;
-}
+
 
 .criticalRow {
   background-color: var(--chart-primary-color) !important;
