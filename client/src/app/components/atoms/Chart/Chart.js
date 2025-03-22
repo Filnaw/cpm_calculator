@@ -34,7 +34,7 @@ const Chart = ({ tasks, dependencies }) => {
         const container = svg.append("g");
 
         container.selectAll(".edge")
-            .data(g.edges())
+            .data(g.edges().filter(d => g.node(d.v) && g.node(d.w)))
             .enter()
             .append("line")
             .attr("x1", (d) => g.node(d.v).x)
@@ -45,7 +45,7 @@ const Chart = ({ tasks, dependencies }) => {
             .attr("stroke-width", 2);
 
         container.selectAll(".edge-label")
-            .data(g.edges())
+            .data(g.edges().filter(d => g.node(d.v) && g.node(d.w)))
             .enter()
             .append("text")
             .attr("x", (d) => (g.node(d.v).x + g.node(d.w).x) / 2)
@@ -67,7 +67,7 @@ const Chart = ({ tasks, dependencies }) => {
             });
 
         container.selectAll(".node")
-            .data(g.nodes())
+            .data(g.nodes().filter(d => g.node(d) && g.node(d).x !== undefined && g.node(d).y !== undefined))
             .enter()
             .append("rect")
             .attr("x", (d) => g.node(d).x - 50)
@@ -78,7 +78,7 @@ const Chart = ({ tasks, dependencies }) => {
             .attr("stroke", "black");
 
         container.selectAll(".node-label")
-            .data(g.nodes())
+            .data(g.nodes().filter(d => g.node(d) && g.node(d).x !== undefined && g.node(d).y !== undefined))
             .enter()
             .append("text")
             .attr("x", (d) => g.node(d).x)

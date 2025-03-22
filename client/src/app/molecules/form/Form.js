@@ -6,18 +6,19 @@ import Container from "@/app/components/atoms/Container/Container";
 import Button from "@/app/components/atoms/Button/Button";
 import {useEffect, useState} from "react";
 
-function Form({ setTasks, setDependencies }) {
+function Form({ setTasks, refreshTable,  refreshChart }) {
     const [taskID, setTaskID] = useState("");
     const [taskName, setTaskName] = useState("");
     const [duration, setDuration] = useState("");
     const [localDependencies, setLocalDependencies] = useState([]);
     const [ganttData, setGanttData] = useState(null);
+    const [dependencies, setDependencies] = useState([]);
+
 
      const fetchGanttData = () => {
         fetch("http://localhost:8000/gantt")
             .then(response => response.json())
             .then(data => {
-                console.log("📡 Pobranie danych z serwera:", data);
                 setGanttData(data);
                 setTasks(data.tasks || []);
                 setDependencies(data.dependencies || []);
@@ -45,8 +46,9 @@ function Form({ setTasks, setDependencies }) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log("📡 Aktualizacja tasks:", data);
         setGanttData(data);
+        refreshTable();
+        refreshChart();
     })
     .catch(error => console.error("Error updating tasks:", error));
 };
@@ -54,44 +56,63 @@ function Form({ setTasks, setDependencies }) {
 
 
     const addTask = () => {
-        const newTask = {
-            id: taskID,
-            name: taskName,
-            duration: duration ? parseInt(duration) : 0,
-            earliest_start: 0,
-            earliest_finish: 0,
-            latest_start: 0,
-            latest_finish: 0,
-            critical: false
-        };
-
-        const newDependencyObjects = localDependencies.map(dep => ({ from: taskID, to: dep.to.trim() }));
-        setTasks(prevTasks => {
-            const updatedTasks = [...prevTasks, newTask];
-            updateTasksOnServer(updatedTasks, [...newDependencyObjects]);
-            return updatedTasks;
-        });
-
-        setDependencies(prevDeps => {
-            const updatedDependencies = [...prevDeps, ...newDependencyObjects];
-            return updatedDependencies;
-        });
-
-
-        setTaskID("");
-        setTaskName("");
-        setDuration("");
-        setLocalDependencies([]);
+    const newTask = {
+        id: taskID,
+        name: taskName,
+        duration: duration ? parseInt(duration) : 0,
+        earliest_start: 0,
+        earliest_finish: 0,
+        latest_start: 0,
+        latest_finish: 0,
+        critical: false
     };
+
+    const newDependencyObjects = localDependencies.map(dep => ({ from: taskID, to: dep.to.trim() }));
+
+    const updatedTasks = [...(ganttData?.tasks || []), newTask];
+    const updatedDependencies = [...dependencies, ...newDependencyObjects]; // <- użycie globalnych dependencies
+
+
+    setGanttData({
+        tasks: updatedTasks,
+        dependencies: updatedDependencies,
+    });
+
+
+    setTasks(updatedTasks);
+    setDependencies(updatedDependencies);
+    updateTasksOnServer(updatedTasks, updatedDependencies);
+
+
+    setTaskID("");
+    setTaskName("");
+    setDuration("");
+    setLocalDependencies([]);
+};
+
 
     const reset = () => {
-        setTaskID("");
-        setTaskName("");
-        setDuration("");
-        setLocalDependencies([]);
-        setTasks([]);
-        setDependencies([]);
-    };
+    setTaskID("");
+    setTaskName("");
+    setDuration("");
+    setLocalDependencies([]);
+    setTasks([]);
+    setDependencies([]);
+
+
+    fetch("http://localhost:8000/gantt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tasks: [], dependencies: [] }),
+    })
+    .then(() => {
+        setGanttData({ tasks: [], dependencies: [] });
+        refreshTable();
+        refreshChart();
+    })
+    .catch(error => console.error("Błąd resetowania danych:", error));
+};
+
 
     const calculate = () =>{
         fetchGanttData();
@@ -139,8 +160,6 @@ function Form({ setTasks, setDependencies }) {
                 <Button onClick={addTask} text="Add Task" variant="default" />
                 <Button onClick={reset} text="Reset" variant="glass" />
             </Container>
-
-            <Button onClick={calculate} text="Calculate" variant="default" />
         </div>
     );
 }

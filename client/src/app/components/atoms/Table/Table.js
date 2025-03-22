@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from "react";
 import "./Table.css";
 
-const Table = ({ setTasks }) => {
+const Table = ({ setTasks, tasks, refreshTable }) => {
     const [tableData, setTableData] = useState(null);
 
     const fetchTableData = () => {
@@ -23,6 +23,14 @@ const Table = ({ setTasks }) => {
     useEffect(() => {
         fetchTableData();
     }, []);
+
+     useEffect(() => {
+        refreshTable();
+    }, []);
+
+    useEffect(() => {
+    setTableData({ tasks });
+  }, [tasks]);
 
 
     if (!tableData) {
@@ -46,18 +54,26 @@ const Table = ({ setTasks }) => {
                 </thead>
 
                 <tbody>
-                {tableData.tasks.map((task, index) => (
-                        <tr key={index} className={task.critical ? "criticalRow" : ""}>
-                            <td>{task.id}</td>
-                            <td>{task.duration}</td>
-                            <td>{task.earliest_start}</td>
-                            <td>{task.earliest_finish}</td>
-                            <td>{task.latest_start}</td>
-                            <td>{task.latest_finish}</td>
-                            <td>{task.latest_start - task.earliest_start}</td>
-                            <td>{task.critical ? "tak" : "nie"}</td>
+               {tableData.tasks.length > 0 ? (
+                        tableData.tasks.map((task, index) => (
+                            <tr key={index} className={task.critical ? "criticalRow" : ""}>
+                                <td>{task.id}</td>
+                                <td>{task.duration}</td>
+                                <td>{task.earliest_start}</td>
+                                <td>{task.earliest_finish}</td>
+                                <td>{task.latest_start}</td>
+                                <td>{task.latest_finish}</td>
+                                <td>{task.latest_start - task.earliest_start}</td>
+                                <td>{task.critical ? "tak" : "nie"}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8" style={{ textAlign: "center", fontStyle: "italic" }}>
+                                Brak danych
+                            </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
 
 

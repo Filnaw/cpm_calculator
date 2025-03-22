@@ -5,17 +5,7 @@ import networkx as nx
 app = Flask(__name__)
 CORS(app, resources={r"/gantt": {"origins": "*"}})
 
-tasks = [
-    {"id": "A", "name": "A", "duration": 3, "dependencies": []},
-    {"id": "B", "name": "B", "duration": 5, "dependencies": []},
-    {"id": "C", "name": "C", "duration": 2, "dependencies": ["A"]},
-    {"id": "D", "name": "D", "duration": 4, "dependencies": ["B"]},
-    {"id": "E", "name": "E", "duration": 3, "dependencies": ["B"]},
-    {"id": "F", "name": "F", "duration": 2, "dependencies": ["C", "D"]},
-    {"id": "G", "name": "G", "duration": 4, "dependencies": ["E"]},
-    {"id": "H", "name": "H", "duration": 3, "dependencies": ["F", "G"]},
-    {"id": "I", "name": "I", "duration": 2, "dependencies": ["H"]}
-]
+tasks = []
 
 def calculate_cpm(tasks):
     G = nx.DiGraph()
