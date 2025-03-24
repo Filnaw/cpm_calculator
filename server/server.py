@@ -1,39 +1,25 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import networkx as nx
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/gantt": {"origins": "*"}})
 
-tasks = [
-    {"id": "A", "name": "A", "duration": 3, "dependencies": []},
-    {"id": "B", "name": "B", "duration": 5, "dependencies": []},
-    {"id": "C", "name": "C", "duration": 2, "dependencies": ["A"]},
-    {"id": "D", "name": "D", "duration": 4, "dependencies": ["B"]},
-    {"id": "E", "name": "E", "duration": 3, "dependencies": ["B"]},
-    {"id": "F", "name": "F", "duration": 2, "dependencies": ["C", "D"]},
-    {"id": "G", "name": "G", "duration": 4, "dependencies": ["E"]},
-    {"id": "H", "name": "H", "duration": 3, "dependencies": ["F", "G"]},
-    {"id": "I", "name": "I", "duration": 2, "dependencies": ["H"]}
-
-]
+tasks = []
 
 def calculate_cpm(tasks):
     G = nx.DiGraph()
-    
-    # Dodaj zadania do grafu
+
     for task in tasks:
         G.add_node(task["id"], duration=task["duration"])
-    
-    # Dodaj zależności
+
     for task in tasks:
-        for dep in task["dependencies"]:
+        for dep in task.get("dependencies", []):
             G.add_edge(dep, task["id"])
-    
-    # Obliczanie najwcześniejszych czasów rozpoczęcia i zakończenia (Forward Pass)
+
     earliest_start = {}
     earliest_finish = {}
-    
+
     for node in nx.topological_sort(G):
         predecessors = list(G.predecessors(node))
         if not predecessors:
@@ -42,19 +28,17 @@ def calculate_cpm(tasks):
             earliest_start[node] = max(earliest_finish[p] for p in predecessors)
         earliest_finish[node] = earliest_start[node] + G.nodes[node]["duration"]
 
-    # Obliczanie najpóźniejszych czasów rozpoczęcia i zakończenia (Backward Pass)
     latest_finish = {node: max(earliest_finish.values()) for node in G.nodes}
     latest_start = {}
 
     for node in reversed(list(nx.topological_sort(G))):
         successors = list(G.successors(node))
         if not successors:
-            latest_finish[node] = earliest_finish[node]  # Dla ostatnich zadań LF = EF
+            latest_finish[node] = earliest_finish[node]
         else:
             latest_finish[node] = min(latest_start[s] for s in successors)
         latest_start[node] = latest_finish[node] - G.nodes[node]["duration"]
 
-    # Identyfikacja ścieżki krytycznej
     critical_path = [node for node in G.nodes if earliest_start[node] == latest_start[node]]
 
     result = {
@@ -73,14 +57,32 @@ def calculate_cpm(tasks):
         ],
         "dependencies": [{"from": u, "to": v} for u, v in G.edges]
     }
-    
+
     return result
 
-@app.route("/api/home", methods=['GET'])
-def return_home():
-    return jsonify({
-        'message': "Hello world!"
-    })
+@app.route('/gantt', methods=['GET'])
+def get_gantt_data():
+    cpm_data = calculate_cpm(tasks)
+    return jsonify(cpm_data)
+
+@app.route('/gantt', methods=['POST'])
+def update_tasks():
+    global tasks
+    data = request.get_json()
+
+    if not data or "tasks" not in data:
+        return jsonify({"error": "Brak listy tasks w żądaniu"}), 400
+
+    tasks = data["tasks"]
+
+    if "dependencies" in data:
+        for dep in data["dependencies"]:
+            task = next((t for t in tasks if t["id"] == dep["to"]), None)
+            if task:
+                task.setdefault("dependencies", []).append(dep["from"])
+
+    return jsonify({"message": "Tasks updated successfully", "tasks": tasks})
+
 
 @app.route('/gantt', methods=['GET'])
 def get_gantt_data():
@@ -88,4 +90,4 @@ def get_gantt_data():
     return jsonify(cpm_data)
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=8000)

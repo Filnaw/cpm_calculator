@@ -1,0 +1,60 @@
+@import '../../../../../__variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+
+.form-group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--label-color);
+    margin-right: 12px;
+    width: 120px;
+    text-align: right;
+    font-family: "Inter", "Roboto", "Source Sans Pro", sans-serif;
+}
+
+
+.input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--label-color);
+    background: var(--input-background);
+    border: 1px solid var(--border-input-color);
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    box-shadow: none;
+}
+
+
+.input:hover {
+    border-color: var(--input-hover-color);
+}
+
+
+.input:focus {
+    border-color: var(--input-focus-color);
+    box-shadow: 0 0 4px var(--box-shadow-input-color);
+    background: var(--input-focus-background-color);
+}
+
+
+.input::placeholder {
+    color: var(--input-placeholder-color);
+    font-style: normal;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+
+.input:focus::placeholder {
+    opacity: 0.3;
+}

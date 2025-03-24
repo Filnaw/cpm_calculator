@@ -1,0 +1,197 @@
+@import '../../../../../__variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: var(--button-text-color);
+  padding: 14px 58px;
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    background 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.3s ease,
+    box-shadow 0.4s ease;
+  box-shadow: 0 8px 15px var(--box-shadow-btn-color);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.button-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--before-btn-primary-color),
+    var(--before-btn-secondary-color)
+  );
+  filter: blur(15px);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -1;
+}
+
+.button-content::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    var(--after-btn-primary-color) 0%,
+    var(--after-btn-secondary-color) 70%
+  );
+  transform: scale(0);
+  transition: transform 0.6s ease-out;
+  z-index: -1;
+}
+
+.button-content:hover::before {
+  opacity: 1;
+}
+
+.button-content:hover::after {
+  transform: scale(1);
+}
+
+.button-content:hover {
+  background: linear-gradient(135deg, var(--hover-btn-primary-color), var(--hover-btn-secondary-color));
+  box-shadow: 0 12px 24px var(--hover-box-shadow-btn-color);
+  transform: translateY(-4px) scale(1.03);
+}
+
+.button-content:active {
+  transform: translateY(-2px) scale(0.98);
+  box-shadow: 0 5px 10px var(--active-box-shadow-btn-color);
+}
+
+.text {
+  font-size: 18px;
+  font-weight: 400;
+  margin-right: 12px;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px var(--text-shadow-color);
+  transition: letter-spacing 0.3s ease;
+  font-family: "Inter", "Roboto", "Source Sans Pro", sans-serif;
+}
+
+.button-content:hover .text {
+  letter-spacing: 1px;
+}
+
+.tooltip-content {
+  position: absolute;
+  top: 102%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: var(--tooltip-background);
+  border-radius: 15px;
+  padding: 22px;
+  box-shadow: 0 15px 30px var(--tooltip-box-shadow-color);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+    transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+    visibility 0.5s ease;
+  z-index: 100;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  background: var(--tooltip-background-color);
+}
+
+.tooltip-container:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  pointer-events: auto;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.button-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--before-btn-background);
+  border-radius: inherit;
+  transform: scale(0);
+  opacity: 0;
+}
+
+.button-content:active::before {
+  animation: ripple 0.6s linear;
+}
+
+
+.tooltip-content::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent var(--tooltip-border-color) transparent;
+  filter: drop-shadow(0 -3px 3px var(--tooltip-filter-color));
+}
+
+
+.button-content:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--focus-btn-primary-color),
+    0 8px 15px var(--focus-btn-secondary-color);
+}
+
+.button-content:focus:not(:focus-visible) {
+  box-shadow: 0 8px 15px var(--focus-btn-box-shadow-color);
+}
+
+.button-content[data-variant="default"] {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.button-content[data-variant="glass"] {
+  background: var(--glass-btn-background-color);
+  border: 1px solid var(--glass-btn-border-color);
+  backdrop-filter: blur(10px);
+}
+
+.button-content[data-variant="glass"]:hover {
+  background: var(--hover-glass-btn-background-color);
+  box-shadow: 0 6px 10px var(--hover-glass-btn-box-shadow-color);
+  transform: translateY(-2px);
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}

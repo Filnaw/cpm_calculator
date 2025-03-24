@@ -1,0 +1,13 @@
+@import "../../../../__variables.css";
+
+.form
+{
+    display: flex;
+    flex-direction: column;
+    height:auto;
+    width: auto;
+    padding: 60px;
+    background-color: var(--form-background-color);
+    justify-content: center;
+    align-items: center;
+}

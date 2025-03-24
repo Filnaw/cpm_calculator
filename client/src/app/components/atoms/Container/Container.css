@@ -1,0 +1,27 @@
+@import '../../../../../__variables.css';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.container.fullscreen {
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--container-background-color);
+}
+
+.container.row {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 98%;
+    align-items: stretch;
+    gap:20px;
+    background-color: var(--container-background-color);
+}
