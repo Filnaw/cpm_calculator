@@ -84,10 +84,5 @@ def update_tasks():
     return jsonify({"message": "Tasks updated successfully", "tasks": tasks})
 
 
-@app.route('/gantt', methods=['GET'])
-def get_gantt_data():
-    cpm_data = calculate_cpm(tasks)
-    return jsonify(cpm_data)
-
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
