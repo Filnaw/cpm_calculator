@@ -11,6 +11,11 @@ const Chart = ({ tasks, dependencies }) => {
 
     useEffect(() => {
         const g = new dagre.graphlib.Graph();
+
+        if (!tasks || tasks.length === 0) {
+        d3.select(svgRef.current).selectAll("*").remove();
+        return;
+        }
         g.setGraph({ rankdir: "LR", nodesep: 50, edgesep: 30 });
 
         tasks.forEach((task) => {
@@ -21,12 +26,15 @@ const Chart = ({ tasks, dependencies }) => {
             });
         });
 
-        dependencies.forEach((dep) => {
+        const existingTaskIds = new Set(tasks.map(task => task.id));
+
+        dependencies
+            .filter(dep => existingTaskIds.has(dep.from) && existingTaskIds.has(dep.to))
+            .forEach((dep) => {
             g.setEdge(dep.from, dep.to, {
                 label: dep.label || "",
             });
         });
-
         dagre.layout(g);
 
         const svg = d3.select(svgRef.current);
@@ -90,7 +98,7 @@ const Chart = ({ tasks, dependencies }) => {
             .text((d) => g.node(d).data.id);
 
         container.selectAll(".node-text")
-            .data(g.nodes())
+            .data(g.nodes().filter(d => g.node(d) && g.node(d).x !== undefined && g.node(d).y !== undefined))
             .enter()
             .append("text")
             .attr("x", (d) => g.node(d).x)
