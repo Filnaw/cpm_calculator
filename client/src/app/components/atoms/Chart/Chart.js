@@ -127,6 +127,40 @@ const Chart = ({ tasks, dependencies }) => {
 
         container.attr("transform", `translate(${translateX}, ${translateY}) scale(${scale})`);
 
+
+        const legendData = [
+      { color: "#ff9900", label: "Critical task" },
+      { color: "rgba(188,186,186,0.3)", label: "Non-critical task" },
+    ];
+
+
+    const legendGroup = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(20, 20)");
+
+
+    legendGroup.selectAll("rect")
+      .data(legendData)
+      .enter()
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", (d, i) => i * 30)
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("fill", (d) => d.color)
+      .attr("stroke", "black");
+
+
+    legendGroup.selectAll("text")
+      .data(legendData)
+      .enter()
+      .append("text")
+      .attr("x", 30)
+      .attr("y", (d, i) => i * 30 + 15)
+      .style("fill", "white")
+      .style("font-size", "14px")
+      .text((d) => d.label);
+
     }, [tasks, dependencies]);
 
     return (

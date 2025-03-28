@@ -166,8 +166,8 @@ function Form({ setTasks, refreshTable, refreshChart }) {
       />
       <Input
         type="text"
-        label="Dependencies (comma-separated IDs):"
-        placeholder="B,C"
+        label="Dependencies (enter one by one):"
+        placeholder="B"
         value={localDependencies.map((dep) => dep.to).join(", ")}
         onChange={(e) => {
           const updatedDeps = e.target.value
