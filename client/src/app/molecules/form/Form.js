@@ -4,7 +4,7 @@ import Input from "@/app/components/atoms/Input/Input";
 import Title from "@/app/components/atoms/Title/Title";
 import Container from "@/app/components/atoms/Container/Container";
 import Button from "@/app/components/atoms/Button/Button";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 function Form({ setTasks, refreshTable, refreshChart }) {
   const [taskID, setTaskID] = useState("");
@@ -13,8 +13,6 @@ function Form({ setTasks, refreshTable, refreshChart }) {
   const [localDependencies, setLocalDependencies] = useState([]);
   const [ganttData, setGanttData] = useState(null);
   const [dependencies, setDependencies] = useState([]);
-
-
   const [error, setError] = useState("");
 
   const fetchGanttData = () => {
@@ -56,7 +54,6 @@ function Form({ setTasks, refreshTable, refreshChart }) {
   };
 
   const addTask = () => {
-    // Walidacja danych:
     if (!taskID.trim() || !taskName.trim() || !duration.trim()) {
       setError("Proszę uzupełnić wszystkie wymagane pola (ID, Name, Duration).");
       return;
@@ -66,6 +63,17 @@ function Form({ setTasks, refreshTable, refreshChart }) {
     if (isNaN(parsedDuration) || parsedDuration <= 0) {
       setError("Duration musi być dodatnią liczbą całkowitą.");
       return;
+    }
+
+    const existingTasks = (ganttData?.tasks || []).map((task) => task.id);
+    for (const dep of localDependencies) {
+      const depID = dep.to.trim();
+      if (!existingTasks.includes(depID)) {
+        setError(
+          `Nie można ustawić "${depID}" jako zależności, ponieważ zadanie "${depID}" nie istnieje. Proszę je najpierw dodać.`
+        );
+        return;
+      }
     }
 
 
@@ -82,6 +90,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
       critical: false,
     };
 
+
     const newDependencyObjects = localDependencies.map((dep) => ({
       from: taskID,
       to: dep.to.trim(),
@@ -90,14 +99,15 @@ function Form({ setTasks, refreshTable, refreshChart }) {
     const updatedTasks = [...(ganttData?.tasks || []), newTask];
     const updatedDependencies = [...dependencies, ...newDependencyObjects];
 
+
     setGanttData({
       tasks: updatedTasks,
       dependencies: updatedDependencies,
     });
-
     setTasks(updatedTasks);
     setDependencies(updatedDependencies);
     updateTasksOnServer(updatedTasks, updatedDependencies);
+
 
     setTaskID("");
     setTaskName("");
@@ -112,6 +122,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
     setLocalDependencies([]);
     setTasks([]);
     setDependencies([]);
+    setError("");
 
     fetch("http://localhost:8000/gantt", {
       method: "POST",
@@ -130,7 +141,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
     <div className="form">
       <Title title="Critical Path Method Calculator" variant="small" />
 
-      {error && <p style={{ color: "red", marginBottom: '1rem' }}>{error}</p>}
+      {error && <p style={{ color: "red", marginBottom: "1rem" }}>{error}</p>}
 
       <Input
         type="text"
