@@ -23,7 +23,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
         setTasks(data.tasks || []);
         setDependencies(data.dependencies || []);
       })
-      .catch((error) => console.error("Błąd pobierania danych:", error));
+      .catch((error) => console.error("Data retrieval error:", error));
   };
 
   useEffect(() => {
@@ -55,13 +55,13 @@ function Form({ setTasks, refreshTable, refreshChart }) {
 
   const addTask = () => {
     if (!taskID.trim() || !taskName.trim() || !duration.trim()) {
-      setError("Proszę uzupełnić wszystkie wymagane pola (ID, Name, Duration).");
+      setError("Please complete all required fields (ID, Name, Duration).");
       return;
     }
 
     const parsedDuration = parseInt(duration, 10);
     if (isNaN(parsedDuration) || parsedDuration <= 0) {
-      setError("Duration musi być dodatnią liczbą całkowitą.");
+      setError("Duration must be a positive integer.");
       return;
     }
 
@@ -70,7 +70,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
       const depID = dep.to.trim();
       if (!existingTasks.includes(depID)) {
         setError(
-          `Nie można ustawić "${depID}" jako zależności, ponieważ zadanie "${depID}" nie istnieje. Proszę je najpierw dodać.`
+          `Cannot be set "${depID}" as dependencies, because the task "${depID}" doesn't exist. Please add it first.`
         );
         return;
       }
@@ -134,7 +134,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
         refreshTable();
         refreshChart();
       })
-      .catch((error) => console.error("Błąd resetowania danych:", error));
+      .catch((error) => console.error("Data reset error:", error));
   };
 
   return (
