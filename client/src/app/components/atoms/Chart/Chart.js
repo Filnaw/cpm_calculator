@@ -11,6 +11,11 @@ const Chart = ({ tasks, dependencies }) => {
 
     useEffect(() => {
         const g = new dagre.graphlib.Graph();
+
+        if (!tasks || tasks.length === 0) {
+        d3.select(svgRef.current).selectAll("*").remove();
+        return;
+        }
         g.setGraph({ rankdir: "LR", nodesep: 50, edgesep: 30 });
 
         tasks.forEach((task) => {
@@ -21,12 +26,15 @@ const Chart = ({ tasks, dependencies }) => {
             });
         });
 
-        dependencies.forEach((dep) => {
+        const existingTaskIds = new Set(tasks.map(task => task.id));
+
+        dependencies
+            .filter(dep => existingTaskIds.has(dep.from) && existingTaskIds.has(dep.to))
+            .forEach((dep) => {
             g.setEdge(dep.from, dep.to, {
                 label: dep.label || "",
             });
         });
-
         dagre.layout(g);
 
         const svg = d3.select(svgRef.current);
@@ -90,7 +98,7 @@ const Chart = ({ tasks, dependencies }) => {
             .text((d) => g.node(d).data.id);
 
         container.selectAll(".node-text")
-            .data(g.nodes())
+            .data(g.nodes().filter(d => g.node(d) && g.node(d).x !== undefined && g.node(d).y !== undefined))
             .enter()
             .append("text")
             .attr("x", (d) => g.node(d).x)
@@ -118,6 +126,40 @@ const Chart = ({ tasks, dependencies }) => {
         const translateY = (height - graphHeight * scale) / 2;
 
         container.attr("transform", `translate(${translateX}, ${translateY}) scale(${scale})`);
+
+
+        const legendData = [
+      { color: "#ff9900", label: "Critical task" },
+      { color: "rgba(188,186,186,0.3)", label: "Non-critical task" },
+    ];
+
+
+    const legendGroup = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(20, 20)");
+
+
+    legendGroup.selectAll("rect")
+      .data(legendData)
+      .enter()
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", (d, i) => i * 30)
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("fill", (d) => d.color)
+      .attr("stroke", "black");
+
+
+    legendGroup.selectAll("text")
+      .data(legendData)
+      .enter()
+      .append("text")
+      .attr("x", 30)
+      .attr("y", (d, i) => i * 30 + 15)
+      .style("fill", "white")
+      .style("font-size", "14px")
+      .text((d) => d.label);
 
     }, [tasks, dependencies]);
 

@@ -34,7 +34,7 @@ const Table = ({ setTasks, tasks, refreshTable }) => {
 
 
     if (!tableData) {
-        return <p>Ładowanie danych...</p>;
+        return <p>Loading data...</p>;
     }
 
     return (
@@ -42,14 +42,14 @@ const Table = ({ setTasks, tasks, refreshTable }) => {
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Czynność</th>
-                        <th>Czas trwania</th>
+                        <th>Activity</th>
+                        <th>Duration</th>
                         <th>ES</th>
                         <th>EF</th>
                         <th>LS</th>
                         <th>LF</th>
-                        <th>Rezerwa</th>
-                        <th>Czynność krytyczna</th>
+                        <th>Reserve</th>
+                        <th>Critical activity</th>
                     </tr>
                 </thead>
 
@@ -64,7 +64,7 @@ const Table = ({ setTasks, tasks, refreshTable }) => {
                                 <td>{task.latest_start}</td>
                                 <td>{task.latest_finish}</td>
                                 <td>{task.latest_start - task.earliest_start}</td>
-                                <td>{task.critical ? "tak" : "nie"}</td>
+                                <td>{task.critical ? "yes" : "no"}</td>
                             </tr>
                         ))
                     ) : (
