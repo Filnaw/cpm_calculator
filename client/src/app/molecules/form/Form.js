@@ -70,12 +70,11 @@ function Form({ setTasks, refreshTable, refreshChart }) {
       const depID = dep.to.trim();
       if (!existingTasks.includes(depID)) {
         setError(
-          `Cannot be set "${depID}" as dependencies, because the task "${depID}" doesn't exist. Please add it first.`
+          `Cannot set "${depID}" as dependency, because the task "${depID}" doesn't exist. Please add it first.`
         );
         return;
       }
     }
-
 
     setError("");
 
@@ -90,15 +89,16 @@ function Form({ setTasks, refreshTable, refreshChart }) {
       critical: false,
     };
 
-
+    // Poprawiona kolejność zależności:
+    // Teraz nowe zadanie (taskID) będzie miało zależność od istniejących zadań,
+    // czyli obiekt będzie wyglądał tak: { from: "B", to: taskID }.
     const newDependencyObjects = localDependencies.map((dep) => ({
-      from: taskID,
-      to: dep.to.trim(),
+      from: dep.to.trim(),
+      to: taskID,
     }));
 
     const updatedTasks = [...(ganttData?.tasks || []), newTask];
     const updatedDependencies = [...dependencies, ...newDependencyObjects];
-
 
     setGanttData({
       tasks: updatedTasks,
@@ -107,7 +107,6 @@ function Form({ setTasks, refreshTable, refreshChart }) {
     setTasks(updatedTasks);
     setDependencies(updatedDependencies);
     updateTasksOnServer(updatedTasks, updatedDependencies);
-
 
     setTaskID("");
     setTaskName("");
@@ -172,7 +171,7 @@ function Form({ setTasks, refreshTable, refreshChart }) {
         onChange={(e) => {
           const updatedDeps = e.target.value
             .split(",")
-            .map((dep) => ({ from: taskID, to: dep.trim() }))
+            .map((dep) => ({ from: "", to: dep.trim() }))
             .filter((dep) => dep.to !== "");
           setLocalDependencies(updatedDeps);
         }}
